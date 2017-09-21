@@ -106,7 +106,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e, " Object Count: " + objects.Count + " Game Objects, Ship Count: " + Game.Instance.GameHandler.ShipCount() + " Bullet Count: " + Game.Instance.GameHandler.BulletManager.Bullets.Count + ".    |||| Object Data: (Type) = " + obj.GetType() + " Position: ( " + obj.MovementController.Position.X + ", " + obj.MovementController.Position.Y + " )  Alive: " + obj.LifeController.Alive);
+                    //ErrorLog.Instance.Log(e, " Object Count: " + objects.Count + " Game Objects, Ship Count: " + Game.Instance.GameHandler.ShipCount() + " Bullet Count: " + Game.Instance.GameHandler.BulletManager.Bullets.Count + ".    |||| Object Data: (Type) = " + obj.GetType() + " Position: ( " + obj.MovementController.Position.X + ", " + obj.MovementController.Position.Y + " )  Alive: " + obj.LifeController.Alive);
                 }
             }
         }

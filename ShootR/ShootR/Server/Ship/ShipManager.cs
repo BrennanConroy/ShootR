@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,31 +6,29 @@ namespace ShootR
 {
     public class ShipManager
     {
-        private RespawnManager _respawnManager;
-        private GameHandler _gameHandler;
+        public ConcurrentDictionary<string, Ship> Ships { get; } = new ConcurrentDictionary<string, Ship>();
 
-        public ShipManager(GameHandler gameHandler)
+        private readonly RespawnManager _respawnManager;
+
+        public ShipManager(GameHandler gameHandler, Game game)
         {
-            Ships = new ConcurrentDictionary<string, Ship>();
-            _gameHandler = gameHandler;
-            _respawnManager = new RespawnManager(_gameHandler);
+            _respawnManager = new RespawnManager(gameHandler, game);
         }
-
-        public ConcurrentDictionary<string, Ship> Ships { get; set; }
 
         /// <summary>
         /// Adds a ship and returns the added ship.  Used to chain methods together.
         /// </summary>
-        /// <param name="s">The ship to add</param>
-        public void Add(Ship s)
+        /// <param name="ship">The ship to add</param>
+        public void Add(Ship ship)
         {
             // Only enable respawn if it hasn't been enabled yet
-            if (!s.RespawnEnabled)
+            if (!ship.RespawnEnabled)
             {
-                s.RespawnEnabled = true;
-                s.OnDeath += new DeathEventHandler(_respawnManager.StartRespawnCountdown);
+                ship.RespawnEnabled = true;
+                ship.OnDeath += new DeathEventHandler(_respawnManager.StartRespawnCountdown);
             }
-            Ships.TryAdd(s.Host.ConnectionID, s);
+
+            Ships.TryAdd(ship.Host.ConnectionID, ship);
         }
 
         /// <summary>
@@ -40,15 +37,14 @@ namespace ShootR
         /// <param name="key"></param>
         public void Remove(string key)
         {
-            Ship s;
-            Ships.TryRemove(key, out s);
+            Ships.TryRemove(key, out var _);
         }
 
-        public void Update(GameTime gameTime)
+        public async Task Update(GameTime gameTime)
         {
-            _respawnManager.Update();
+            await _respawnManager.Update();
 
-            List<string> keysToRemove = new List<string>(Ships.Count);
+            var keysToRemove = new List<string>(Ships.Count);
             Parallel.ForEach(Ships, currentShip =>
             {
                 if (!currentShip.Value.Disposed)

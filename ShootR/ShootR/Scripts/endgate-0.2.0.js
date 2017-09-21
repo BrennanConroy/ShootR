@@ -3679,7 +3679,7 @@ var EndGate;
                     code = keyEvent.which;
                 }
 
-                if (!((character = String.fromCharCode(keyEvent.keyCode)) === keyEvent.key)) {
+                if (!((character = String.fromCharCode(keyEvent.keyCode)) === (keyEvent.key === " " ? "space" : keyEvent.key))) {
                     if (!(character = specialKeys[code])) {
                         character = String.fromCharCode(code).toLowerCase();
 

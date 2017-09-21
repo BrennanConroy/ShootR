@@ -95,7 +95,7 @@ var ShootR;
                 this._leaderboardHolder.css("display", "block");
                 this._popUpHolder.fadeIn(350);
                 this._gameCover.fadeIn(350);
-                this._serverAdapter.Proxy.invoke("readyForLeaderboardPayloads");
+                this._serverAdapter.Connection.invoke("readyForLeaderboardPayloads");
             }
         };
 
@@ -107,7 +107,7 @@ var ShootR;
                     _this._leaderboardHolder.css("display", "none");
                 });
                 this._gameCover.fadeOut(200);
-                this._serverAdapter.Proxy.invoke("stopLeaderboardPayloads");
+                this._serverAdapter.Connection.invoke("stopLeaderboardPayloads");
             }
         };
         return LeaderboardManager;

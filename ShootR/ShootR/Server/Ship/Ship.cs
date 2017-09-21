@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
+
 namespace ShootR
 {
     /// <summary>
@@ -24,10 +25,12 @@ namespace ShootR
         private ShipInterpolationManager _interpolationManager;
         private ConcurrentQueue<Action> _enqueuedCommands;
         private ShipSnapShotManager _snapShotManager;
+        private Game _game;
 
-        public Ship(Vector2 position, BulletManager bm)
+        public Ship(Game game, Vector2 position, BulletManager bm)
             : base(WIDTH, HEIGHT, new ShipMovementController(position), new ShipLifeController(START_LIFE), new HarmlessDamageController())
         {
+            _game = game;
             ID = Interlocked.Increment(ref _shipGUID);
             Name = "Ship" + ID;
             StatRecorder = new ShipStatRecorder(this);
@@ -41,7 +44,7 @@ namespace ShootR
 
             _enqueuedCommands = new ConcurrentQueue<Action>();
             _interpolationManager = new ShipInterpolationManager(MovementController);
-            _snapShotManager = new ShipSnapShotManager(this);
+            _snapShotManager = new ShipSnapShotManager(this, _game);
         }
 
         public string Name { get; set; }
@@ -105,7 +108,7 @@ namespace ShootR
             }
 
             // Spawn health pack on death
-            Game.Instance.GameHandler.AddPowerupToGame(new HealthPack(MovementController.Position, LevelManager.Level));
+            _game.GameHandler.AddPowerupToGame(new HealthPack(MovementController.Position, LevelManager.Level));
 
             LastKilledBy = (e.KilledBy as Bullet).FiredBy;
             Host.DeathOccured = true;

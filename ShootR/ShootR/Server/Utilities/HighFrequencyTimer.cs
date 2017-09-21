@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace Microsoft.AspNet.SignalR
+namespace ShootR
 {
     /// <summary>
     /// A high-resolution FPS timer.

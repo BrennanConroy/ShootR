@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ShootR
 {
@@ -9,21 +11,23 @@ namespace ShootR
         public const int LEADERBOARD_SIZE = 4;
         public const string LEADERBOARD_REQUESTEE_GROUP = "LeaderboardRequestees";
 
-        private UserHandler _userHandler;
+        private readonly UserHandler _userHandler;
+        private readonly IHubContext<GameHub> _gameHub;
 
-        public Leaderboard(UserHandler userHandler)
+        public Leaderboard(UserHandler userHandler, IHubContext<GameHub> gameHub)
         {
             _userHandler = userHandler;
+            _gameHub = gameHub;
         }
 
-        public void RequestLeaderboard(string connectionId)
+        public Task RequestLeaderboardAsync(string connectionId)
         {
-            Game.GetContext().Groups.Add(connectionId, LEADERBOARD_REQUESTEE_GROUP);
+            return _gameHub.Groups.AddAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
         }
 
-        public void StopRequestingLeaderboard(string connectionId)
+        public Task StopRequestingLeaderboardAsync(string connectionId)
         {
-            Game.GetContext().Groups.Remove(connectionId, LEADERBOARD_REQUESTEE_GROUP);
+            return _gameHub.Groups.RemoveAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
         }
 
         public IEnumerable<LeaderboardEntry> GetAndUpdateLeaderboard()

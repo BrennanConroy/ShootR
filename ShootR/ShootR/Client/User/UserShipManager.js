@@ -14,7 +14,8 @@ var ShootR;
             this._shipManager = _shipManager;
             this._collisionManager = _collisionManager;
             this._camera = _camera;
-            this._proxy = serverAdapter.Proxy;
+            this._connection = serverAdapter.Connection;
+            //this._proxy = serverAdapter.Proxy;
             this._userCameraController = new ShootR.UserCameraController(this.ControlledShipId, this._shipManager, this._camera);
             this._lastSync = new Date();
             this.LatencyResolver = new ShootR.LatencyResolver(serverAdapter);
@@ -56,7 +57,7 @@ var ShootR;
             }, function (fireMethod) {
                 var hubMethod = fireMethod.substr(0, 1).toUpperCase() + fireMethod.substring(1);
 
-                _this._proxy.invoke(hubMethod);
+                _this._connection.invoke(hubMethod);
             });
         }
         UserShipManager.prototype.LoadPayload = function (payload) {
@@ -73,7 +74,7 @@ var ShootR;
             if (ship) {
                 if (eg.TimeSpan.DateSpan(this._lastSync, gameTime.Now).Seconds > UserShipManager.SYNC_INTERVAL.Seconds && ship.LifeController.Alive) {
                     this._lastSync = gameTime.Now;
-                    this._proxy.invoke("syncMovement", { X: Math.round(ship.MovementController.Position.X - ship.Graphic.Size.HalfWidth), Y: Math.round(ship.MovementController.Position.Y - ship.Graphic.Size.HalfHeight) }, Math.roundTo(ship.MovementController.Rotation * 57.2957795, 2), { X: Math.round(ship.MovementController.Velocity.X), Y: Math.round(ship.MovementController.Velocity.Y) });
+                    this._connection.invoke("syncMovement", { X: Math.round(ship.MovementController.Position.X - ship.Graphic.Size.HalfWidth), Y: Math.round(ship.MovementController.Position.Y - ship.Graphic.Size.HalfHeight) }, Math.roundTo(ship.MovementController.Rotation * 57.2957795, 2), { X: Math.round(ship.MovementController.Velocity.X), Y: Math.round(ship.MovementController.Velocity.Y) });
                 }
 
                 this._userCameraController.Update(gameTime);
@@ -83,7 +84,7 @@ var ShootR;
         UserShipManager.prototype.Invoke = function (method, pingBack, command) {
             var ship = this._shipManager.GetShip(this.ControlledShipId);
 
-            this._proxy.invoke(method, command.Command, { X: Math.round(ship.MovementController.Position.X - ship.Graphic.Size.HalfWidth), Y: Math.round(ship.MovementController.Position.Y - ship.Graphic.Size.HalfHeight) }, Math.roundTo(ship.MovementController.Rotation * 57.2957795, 2), { X: Math.round(ship.MovementController.Velocity.X), Y: Math.round(ship.MovementController.Velocity.Y) }, pingBack);
+            this._connection.invoke(method, command.Command, { X: Math.round(ship.MovementController.Position.X - ship.Graphic.Size.HalfWidth), Y: Math.round(ship.MovementController.Position.Y - ship.Graphic.Size.HalfHeight) }, Math.roundTo(ship.MovementController.Rotation * 57.2957795, 2), { X: Math.round(ship.MovementController.Velocity.X), Y: Math.round(ship.MovementController.Velocity.Y) }, pingBack);
         };
 
         UserShipManager.prototype.NewMovementCommand = function (direction, startMoving) {

@@ -91,9 +91,9 @@ namespace ShootR
 
         public List<object> GetLeaderboardPayloads(IEnumerable<LeaderboardEntry> leaderboard)
         {
-            List<object> result = new List<object>();
+            var result = new List<object>();
 
-            foreach (LeaderboardEntry entry in leaderboard)
+            foreach (var entry in leaderboard)
             {
                 result.Add(Compressor.Compress(entry));
             }

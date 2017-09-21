@@ -1,32 +1,23 @@
-﻿using System.Diagnostics;
+using System.Threading.Tasks;
+
 namespace ShootR
 {
     public class GameHandler
     {
-        private ShipManager _shipManager;
-        private PowerupManager _powerupManager;
+        public BulletManager BulletManager { get; set; } = new BulletManager();
+
+        private readonly ShipManager _shipManager;
+        private readonly PowerupManager _powerupManager;
         private CollisionManager _collisionManager;
-        private Map _space;
+        private readonly Map _space;
 
-        public GameHandler(Map space)
+        public GameHandler(Map space, Game game)
         {
-            BulletManager = new BulletManager();
-            _collisionManager = new CollisionManager(space);
-            _shipManager = new ShipManager(this);
-            _powerupManager = new PowerupManager();
-
             _space = space;
-        }
+            _shipManager = new ShipManager(this, game);
+            _collisionManager = new CollisionManager(space);
 
-        public BulletManager BulletManager { get; set; }
-
-        public void RemoveShipFromGame(Ship ship)
-        {
-            if (ship != null)
-            {
-                _shipManager.Remove(ship.Host.ConnectionID);
-                _collisionManager.UnMonitor(ship);
-            }
+            _powerupManager = new PowerupManager();
         }
 
         public void AddShipToGame(Ship ship)
@@ -35,6 +26,15 @@ namespace ShootR
             {
                 _shipManager.Add(ship);
                 _collisionManager.Monitor(ship);
+            }
+        }
+
+        public void RemoveShipFromGame(Ship ship)
+        {
+            if (ship != null)
+            {
+                _shipManager.Remove(ship.Host.ConnectionID);
+                _collisionManager.UnMonitor(ship);
             }
         }
 
@@ -49,14 +49,9 @@ namespace ShootR
             _space.Insert(powerup);
         }
 
-        public int ShipCount()
+        public async Task Update(GameTime gameTime)
         {
-            return _shipManager.Ships.Count;
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            _shipManager.Update(gameTime);
+            await _shipManager.Update(gameTime);
             _powerupManager.Update(gameTime);
             BulletManager.Update(gameTime);
 

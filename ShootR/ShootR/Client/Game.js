@@ -37,8 +37,8 @@ var ShootR;
             this._bulletManager = new ShootR.BulletManager(this._bufferedViewport, this.Scene, this.Content);
             this._powerupManager = new ShootR.PowerupManager(this._bufferedViewport, this.Scene, this.Content);
             this._map = new ShootR.Map(this.Scene, this.CollisionManager, this.Content, this.Input.Keyboard, serverAdapter);
-            this._debugManager = new ShootR.Debug.DebugManager(initializationData.ShipID, this, serverAdapter);
             this._hud = new ShootR.HUDManager(initializationData, this._shipManager, this._map.AreaRenderer, this.Input.Keyboard, serverAdapter);
+            this._debugManager = new ShootR.Debug.DebugManager(initializationData.ShipID, this, serverAdapter);
 
             serverAdapter.OnPayload.Bind(function (payload) {
                 _this._shipManager.LoadPayload(payload);
@@ -52,6 +52,8 @@ var ShootR;
                 _this._hud.OnScreenResize(newSize);
                 _this._bufferedViewport.Size = newSize.Add(ShootR.GameScreen.SCREEN_BUFFER_AREA);
             });
+
+            this._doneConstructing = true;
         }
         Game.prototype.LoadContent = function () {
             this.Content.LoadImage("StarBackground", "/Images/bg_stars.png", 1000, 1000);

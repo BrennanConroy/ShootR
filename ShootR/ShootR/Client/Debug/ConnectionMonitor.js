@@ -23,9 +23,9 @@ var ShootR;
 
                 this.UpdateText();
 
-                this._connection.stateChanged(function (stateChange) {
-                    _this.UpdateText();
-                });
+                // this._connection.stateChanged(function (stateChange) {
+                //     _this.UpdateText();
+                // });
             }
             ConnectionMonitor.prototype.UpdateText = function () {
                 this._textNode.Color = this.DetermineColor();
@@ -33,19 +33,20 @@ var ShootR;
             };
 
             ConnectionMonitor.prototype.DetermineColor = function () {
-                return ConnectionMonitor.STATE_MAP[this.GetStateText()];
+                return eg.Graphics.Color.LightGreen;//ConnectionMonitor.STATE_MAP[this.GetStateText()];
             };
 
             ConnectionMonitor.prototype.GetStateText = function () {
-                return ConnectionState[(this._connection).state];
+                return "Connected";
+                //return ConnectionState[(this._connection).state];
             };
             ConnectionMonitor.TITLE = "Connection State";
-            ConnectionMonitor.STATE_MAP = {
-                Connecting: eg.Graphics.Color.Gray,
-                Connected: eg.Graphics.Color.LightGreen,
-                Reconnecting: eg.Graphics.Color.LightGoldenRodYellow,
-                Disconnected: eg.Graphics.Color.Red
-            };
+            // ConnectionMonitor.STATE_MAP = {
+            //     Connecting: eg.Graphics.Color.Gray,
+            //     Connected: eg.Graphics.Color.LightGreen,
+            //     Reconnecting: eg.Graphics.Color.LightGoldenRodYellow,
+            //     Disconnected: eg.Graphics.Color.Red
+            // };
             return ConnectionMonitor;
         })();
         Debug.ConnectionMonitor = ConnectionMonitor;

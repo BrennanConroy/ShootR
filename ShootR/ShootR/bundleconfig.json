@@ -1,0 +1,108 @@
+[
+  {
+      "outputFileName": "wwwroot/scripts/bundles/jqueryjs.js",
+      "inputFiles": [
+          "Scripts/jquery-1.9.1.js",
+          "Scripts/jquery.cookie.js",
+          "Scripts/jquery.animate-colors-min.js",
+          "Scripts/jquery-ui-1.9.0.js",
+          "Scripts/shortcut.js"
+      ],
+      "minify": {
+        "enabled": true
+      }
+  },
+  {
+    "outputFileName": "wwwroot/scripts/bundles/game.js",
+    "inputFiles": [
+        "Scripts/endgate-0.2.0.js",
+        "Client/Utilities/UtilityFunctions.js",
+        "Client/Common/Animation.js",
+        "Client/Common/LifeController.js",
+        "Client/Server/PayloadDecompressor.js",
+        "Client/Server/ServerConnectionManager.js",
+        "Client/Server/ServerAdapter.js",
+        "Client/Configuration/ConfigurationManager.js",
+        "Client/GameScreen.js",
+        "Client/Space/MapBoundary.js",
+        "Client/Space/Area.js",
+        "Client/Space/AreaRenderer.js",
+        "Client/Space/Map.js",
+        "Client/Powerups/Graphics/HealthPackGraphic.js",
+        "Client/Powerups/Powerup.js",
+        "Client/Powerups/HealthPack.js",
+        "Client/Powerups/PowerupManager.js",
+        "Client/Bullets/BulletGraphic.js",
+        "Client/Bullets/BulletMovementController.js",
+        "Client/Bullets/Animations/BulletAnimationHandler.js",
+        "Client/Bullets/Animations/BulletExplosionAnimation.js",
+        "Client/Bullets/Bullet.js",
+        "Client/Bullets/BulletManager.js",
+        "Client/Ships/Abilities/Ability.js",
+        "Client/Ships/Abilities/MovementAbility.js",
+        "Client/Ships/Abilities/Boost.js",
+        "Client/Ships/Abilities/AbilityHandlers/AbilityHandler.js",
+        "Client/Ships/Abilities/AbilityHandlers/ShipAbilityHandler.js",
+        "Client/Ships/Graphics/ShipLifeGraphic.js",
+        "Client/Ships/Graphics/ShipDamageGraphic.js",
+        "Client/Ships/Graphics/ShipBodyGraphic.js",
+        "Client/Ships/Graphics/ShipNameGraphic.js",
+        "Client/Ships/Graphics/ShipGraphic.js",
+        "Client/Ships/Graphics/StatusText.js",
+        "Client/Ships/Graphics/ShipStatusTextGraphic.js",
+        "Client/Ships/Animations/ShipAnimationHandler.js",
+        "Client/Ships/Animations/ShipBoostAnimation.js",
+        "Client/Ships/Animations/ShipThrustAnimation.js",
+        "Client/Ships/Animations/ShipDeathAnimation.js",
+        "Client/Ships/ShipInterpolationManager.js",
+        "Client/Ships/ShipMovementController.js",
+        "Client/Ships/ShipFireController.js",
+        "Client/Ships/ShipInputController.js",
+        "Client/Ships/ShipLifeController.js",
+        "Client/Ships/Levels/ShipLevelManager.js",
+        "Client/Ships/Ship.js",
+        "Client/User/UserCameraController.js",
+        "Client/User/LatencyResolver.js",
+        "Client/User/UserShipManager.js",
+        "Client/Ships/ShipManager.js",
+        "Client/Debug/RateMonitor.js",
+        "Client/Debug/UpdateRate.js",
+        "Client/Debug/DrawRate.js",
+        "Client/Debug/PayloadRate.js",
+        "Client/Debug/GameInformer.js",
+        "Client/Debug/ServerGhost.js",
+        "Client/Debug/ConnectionMonitor.js",
+        "Client/Debug/DebugManager.js",
+        "Client/HUD/UserInformationManager.js",
+        "Client/HUD/NotificationManager.js",
+        "Client/HUD/DeathScreen.js",
+        "Client/HUD/LeaderboardManager.js",
+        "Client/HUD/EnvironmentMonitor.js",
+        "Client/HUD/RankingsManager.js",
+        "Client/HUD/ExperienceMonitor.js",
+        "Client/HUD/HealthMonitor.js",
+        "Client/HUD/ShipStatMonitor.js",
+        "Client/HUD/HUDManager.js",
+        "Client/HUD/Chat.js",
+        "Client/Game.js",
+        "Client/Main.js"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/styles/bundles/main.css",
+    "inputFiles": [
+      "Styles/jquery-ui-1.9.0.css",
+      "Styles/bootstrap.min.css",
+      "Styles/game.css",
+      "Styles/chat.css",
+      "Styles/gameHUD.css",
+      "Styles/popups.css"
+    ],
+    "minify": {
+      "enabled": true
+    }
+  }
+]

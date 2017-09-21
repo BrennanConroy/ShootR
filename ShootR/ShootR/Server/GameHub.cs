@@ -1,51 +1,28 @@
-﻿using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Diagnostics;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ShootR
 {
-    [HubName("h")]
     public class GameHub : Hub
     {
         private readonly Game _game;
-
-        public GameHub() : this(Game.Instance) { }
-
         public GameHub(Game game)
         {
             _game = game;
         }
 
-        #region Connection Methods
-        public override Task OnConnected()
+        public override Task OnConnectedAsync()
         {
             _game.ConnectionManager.OnConnected(Context.ConnectionId);
-            return base.OnConnected();
+            return Task.CompletedTask;
         }
 
-        public override Task OnReconnected()
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _game.ConnectionManager.OnReconnected(Context.ConnectionId);
-            return base.OnReconnected();
-        }
-
-        public override Task OnDisconnected()
-        {
-            _game.ConnectionManager.OnDisconnected(Context.ConnectionId);
-            return base.OnDisconnected();
-        }
-
-        #endregion
-
-        #region Client Accessor Methods
-
-        public DateTime ping()
-        {
-            return DateTime.UtcNow;
+            await _game.ConnectionManager.OnDisconnectedAsync(Context.ConnectionId);
         }
 
         /// <summary>
@@ -72,7 +49,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
 
             return 0;
@@ -96,11 +73,10 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
-
 
         /// <summary>
         /// Called when a ship stops firing a stream of bullet
@@ -118,39 +94,11 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
 
             return 0;
-        }
-
-        /// <summary>
-        /// Retrieves the game's configuration
-        /// </summary>
-        /// <returns>The game's configuration</returns>
-        public object initializeClient(string registrationID)
-        {
-            if (_game.RegistrationHandler.RegistrationExists(registrationID))
-            {
-                return _game.initializeClient(Context.ConnectionId, _game.RegistrationHandler.RemoveRegistration(registrationID));
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Retrieves the game's configuration
-        /// </summary>
-        /// <returns>The game's configuration</returns>
-        public object initializeController(string registrationID)
-        {
-            if (_game.RegistrationHandler.RegistrationExists(registrationID))
-            {
-                return _game.initializeController(Context.ConnectionId, _game.RegistrationHandler.RemoveRegistration(registrationID));
-            }
-
-            return null;
         }
 
         public void readyForPayloads()
@@ -161,8 +109,18 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
+        }
+
+        public object initializeClient(string registrationID)
+        {
+            if (_game.RegistrationHandler.RegistrationExists(registrationID))
+            {
+                return _game.initializeClient(Context.ConnectionId, _game.RegistrationHandler.RemoveRegistration(registrationID));
+            }
+
+            return null;
         }
 
         public virtual void syncMovement(Vector2 at, double angle, Vector2 velocity)
@@ -175,7 +133,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
@@ -184,7 +142,7 @@ namespace ShootR
         /// Resets all movement flags on the ship
         /// </summary>
         /// <param name="pingBack"></param>
-        public void resetMovement(List<string> movementList, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task resetMovement(List<string> movementList, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -192,7 +150,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -210,12 +168,12 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
 
-        public void startAndStopMovement(string toStop, string toStart, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task startAndStopMovement(string toStop, string toStart, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -223,7 +181,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -238,16 +196,16 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
 
         /// <summary>
-        /// Registers the start of a movement on a clint.  Fires when the client presses a movement hotkey.
+        /// Registers the start of a movement on a client. Fires when the client presses a movement hotkey.
         /// </summary>
         /// <param name="movement">Direction to start moving</param>
-        public void registerMoveStart(string movement, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task registerMoveStart(string movement, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -255,29 +213,29 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
 
                     if (ship.Controllable.Value)
                     {
-                        Movement where = (Movement)Enum.Parse(typeof(Movement), movement);
+                        var where = (Movement)Enum.Parse(typeof(Movement), movement);
                         ship.StartMoving(where, at, angle, velocity);
                     }
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
 
         /// <summary>
-        /// Registers the stop of a movement on a client.  Fires when the client presses a movement hotkey.
+        /// Registers the stop of a movement on a client. Fires when the client presses a movement hotkey.
         /// </summary>
         /// <param name="movement">Direction to stop moving</param>
-        public void registerMoveStop(string movement, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task registerMoveStop(string movement, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -285,25 +243,25 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
 
                     if (ship.Controllable.Value)
                     {
-                        Movement where = (Movement)Enum.Parse(typeof(Movement), movement);
+                        var where = (Movement)Enum.Parse(typeof(Movement), movement);
                         ship.StopMoving(where, at, angle, velocity);
                     }
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
 
-        public void registerAbilityStart(string abilityName, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task registerAbilityStart(string abilityName, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -311,7 +269,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -323,12 +281,12 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
             }
         }
 
-        public void registerAbilityStop(string abilityName, Vector2 at, double angle, Vector2 velocity, bool pingBack)
+        public async Task registerAbilityStop(string abilityName, Vector2 at, double angle, Vector2 velocity, bool pingBack)
         {
             if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
             {
@@ -336,7 +294,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        Clients.Caller.pingBack();
+                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -348,15 +306,8 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    ErrorLog.Instance.Log(e);
+                    //ErrorLog.Instance.Log(e);
                 }
-            }
-        }
-
-        public void registerAbilityStop(string ability)
-        {
-            if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
-            {
             }
         }
 
@@ -371,43 +322,43 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
         }
 
-        public void readyForLeaderboardPayloads()
+        public async Task readyForLeaderboardPayloads()
         {
             try
             {
                 if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
                 {
                     _game.UserHandler.GetUser(Context.ConnectionId).IdleManager.RecordActivity();
-                    _game.Leaderboard.RequestLeaderboard(Context.ConnectionId);
+                    await _game.Leaderboard.RequestLeaderboardAsync(Context.ConnectionId);
                 }
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
         }
 
-        public void stopLeaderboardPayloads()
+        public async Task stopLeaderboardPayloads()
         {
             try
             {
                 if (_game.UserHandler.UserExistsAndReady(Context.ConnectionId))
                 {
                     _game.UserHandler.GetUser(Context.ConnectionId).IdleManager.RecordActivity();
-                    _game.Leaderboard.StopRequestingLeaderboard(Context.ConnectionId);
+                    await _game.Leaderboard.StopRequestingLeaderboardAsync(Context.ConnectionId);
                 }
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
         }
 
-        public void sendMessage(string message)
+        public async Task sendMessage(string message)
         {
             try
             {
@@ -417,14 +368,13 @@ namespace ShootR
                     var from = ship.Name;
 
                     //TODO: send a message to #shootr using the jabbr c# client later
-                    Clients.Others.chatMessage(from, message, 0 /* standard message */);
+                    await Clients.AllExcept(new List<string>{ Context.ConnectionId }).InvokeAsync("chatMessage", from, message, 0 /* standard message */);
                 }
             }
             catch (Exception e)
             {
-                ErrorLog.Instance.Log(e);
+                //ErrorLog.Instance.Log(e);
             }
         }
-        #endregion
     }
 }

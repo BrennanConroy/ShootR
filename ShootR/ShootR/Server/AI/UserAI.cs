@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNet.SignalR;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ShootR
 {
@@ -14,9 +15,10 @@ namespace ShootR
             ReadyForPayloads = true;
         }
 
-        public override void PushToClient(object[] payload, IHubContext context)
+        public override Task PushToClientAsync(object[] payload, IHubContext<GameHub> context)
         {
             (MyShip as ShipAI).LoadShipsOnScreen(_decompressor.DecompressShips(payload, MyShip.ID));
+            return Task.CompletedTask;
         }
     }
 }

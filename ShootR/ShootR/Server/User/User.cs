@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNet.SignalR;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ShootR
 {
@@ -11,22 +12,18 @@ namespace ShootR
         public const int MIN_SCREEN_WIDTH = 1000;
         public const int MIN_SCREEN_HEIGHT = 660;
 
-        public User(string connectionID, RegisteredClient rc)
-            : this(connectionID, null, rc)
-        {
-        }
-
         public User(string connectionID, Ship ship, RegisteredClient rc)
         {
             RegistrationTicket = rc;
-            ConnectionID = connectionID;
             MyShip = ship;
-            ReadyForPayloads = false;
+            ConnectionID = connectionID;
+
             Viewport = new Size(0, 0); // Initialize the viewport to 0 by 0
-            RemoteControllers = new List<User>();
+
             NotificationManager = new NotificationManager();
             IdleManager = new IdleManager(ship, NotificationManager);
             Connected = true;
+            ReadyForPayloads = false;
 
             if (ship != null)
             {
@@ -34,22 +31,19 @@ namespace ShootR
             }
         }
 
+        public Ship MyShip { get; set; }
+        public string ConnectionID { get; set; }
+        public bool Controller { get; set; }
         public bool Connected { get; set; }
         public RegisteredClient RegistrationTicket { get; set; }
-        public List<User> RemoteControllers { get; set; }
         public NotificationManager NotificationManager { get; private set; }
+
         public IdleManager IdleManager { get; private set; }
-        public string ConnectionID { get; set; }
-        public Ship MyShip { get; set; }
-        public bool Controller { get; set; }
-        public bool ReadyForPayloads { get; set; }
         public int CurrentLeaderboardPosition { get; set; }
         public bool DeathOccured { get; set; }
+        public bool ReadyForPayloads { get; set; }
 
-        public virtual void PushToClient(object[] payload, IHubContext context)
-        {
-            context.Clients.Client(ConnectionID).d(payload);
-        }
+        public List<User> RemoteControllers { get; } = new List<User>();
 
         private Size _viewport;
         public Size Viewport
@@ -71,6 +65,11 @@ namespace ShootR
 
                 _viewport = value;
             }
+        }
+
+        public virtual Task PushToClientAsync(object[] payload, IHubContext<GameHub> context)
+        {
+            return context.Clients.Client(ConnectionID).InvokeAsync("d", new [] { payload });
         }
 
         public void Update()

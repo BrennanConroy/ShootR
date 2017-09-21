@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 
 namespace ShootR
 {
@@ -11,17 +12,19 @@ namespace ShootR
         public const int RESPAWN_TIMER = 7;
         
         private List<KeyValuePair<Ship, DateTime>> _respawningShips;
-        private GameHandler _gameHandler;
+        private readonly GameHandler _gameHandler;
+        private readonly Game _game;
         private static Random _gen;
 
-        public RespawnManager(GameHandler gameHandler)
+        public RespawnManager(GameHandler gameHandler, Game game)
         {
             _respawningShips = new List<KeyValuePair<Ship, DateTime>>();
             _gameHandler = gameHandler;
              _gen = new Random();
+             _game = game;
         }
 
-        public bool TryRespawn(Ship ship, DateTime startedAt)
+        public async Task<bool> TryRespawn(Ship ship, DateTime startedAt)
         {
             // We should respawn
             // We also check the ships host to ensure that we did not remove the user
@@ -36,7 +39,7 @@ namespace ShootR
                 ship.Controllable.Value = true;
                 _gameHandler.AddShipToGame(ship);
 
-                Game.Instance.Leaderboard.StopRequestingLeaderboard(ship.Host.ConnectionID);
+                await _game.Leaderboard.StopRequestingLeaderboardAsync(ship.Host.ConnectionID);
                 return true;
             }
             else
@@ -51,7 +54,7 @@ namespace ShootR
             // Don't want to subscribe AI to retrieve leaderboard info
             if(!(ship is ShipAI))
             {
-                Game.Instance.Leaderboard.RequestLeaderboard(ship.Host.ConnectionID);                
+                _game.Leaderboard.RequestLeaderboardAsync(ship.Host.ConnectionID).GetAwaiter().GetResult();                
             }
 
             ship.Controllable.Value = false;
@@ -63,12 +66,12 @@ namespace ShootR
             return new Vector2(_gen.Next(Ship.WIDTH * 2, Map.WIDTH - Ship.WIDTH * 2), _gen.Next(Ship.HEIGHT * 2, Map.HEIGHT - Ship.HEIGHT * 2));
         }
 
-        public void Update()
+        public async Task Update()
         {
             for (int i = 0; i < _respawningShips.Count; i++)
             {
                 // If respawn was successful
-                if (TryRespawn(_respawningShips[i].Key, _respawningShips[i].Value))
+                if (await TryRespawn(_respawningShips[i].Key, _respawningShips[i].Value))
                 {
                     _respawningShips.RemoveAt(i--);
                 }

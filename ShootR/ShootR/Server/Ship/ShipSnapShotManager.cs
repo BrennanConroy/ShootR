@@ -12,9 +12,9 @@ namespace ShootR
         private Rectangle _bounds;
         private object _updateLock;
 
-        public ShipSnapShotManager(Ship ship)
+        public ShipSnapShotManager(Ship ship, Game game)
         {
-            _snapShotLifetime = TimeSpan.FromMilliseconds(Game.Instance.Configuration.gameConfig.DRAW_INTERVAL * 1.5);
+            _snapShotLifetime = TimeSpan.FromMilliseconds(game.Configuration.gameConfig.DRAW_INTERVAL * 1.5);
 
             _snapShotTail = new BoundsSnapShot
             {

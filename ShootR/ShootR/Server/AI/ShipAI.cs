@@ -30,8 +30,8 @@ namespace ShootR
         private DateTime _lastFired = DateTime.UtcNow;
         private DateTime _lastBoundaryRedirection = DateTime.UtcNow;
 
-        public ShipAI(Vector2 position, BulletManager bulletManager)
-            : base(position, bulletManager)
+        public ShipAI(Vector2 position, BulletManager bulletManager, Game game)
+            : base(game, position, bulletManager)
         {
             _state = AIState.Wandering;
             MovementController.Rotation = _gen.Next(0, 360);

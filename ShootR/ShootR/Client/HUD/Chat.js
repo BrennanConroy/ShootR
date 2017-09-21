@@ -50,7 +50,7 @@ var ShootR;
                             var message = _this._chatBox.val();
                             if (message) {
                                 _this.AddMessage(new ChatMessage(_this._userInformation.Name, message, ChatMessageType.User));
-                                serverAdapter.Proxy.invoke("sendMessage", message);
+                                serverAdapter.Connection.invoke("sendMessage", message);
                             }
                             _this.HideChatBox();
                         } else {

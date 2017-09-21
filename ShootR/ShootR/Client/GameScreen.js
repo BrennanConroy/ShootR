@@ -23,7 +23,7 @@ var ShootR;
                 }, 250);
             });
 
-            this.ForceResizeCheck();
+            //this.ForceResizeCheck();
         }
         GameScreen.prototype.ForceResizeCheck = function () {
             this.ScreenResizeEvent();
@@ -62,7 +62,7 @@ var ShootR;
         };
 
         GameScreen.prototype.SendNewViewportToServer = function () {
-            this._serverAdapter.Proxy.invoke("changeViewport", this.Viewport.Width, this.Viewport.Height);
+            this._serverAdapter.Connection.invoke("changeViewport", this.Viewport.Width, this.Viewport.Height);
         };
         GameScreen.MAX_SCREEN_WIDTH = 10000;
         GameScreen.MAX_SCREEN_HEIGHT = 10000;

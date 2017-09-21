@@ -1,7 +1,8 @@
 ﻿
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.AspNet.SignalR;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ShootR
 {
@@ -17,15 +18,19 @@ namespace ShootR
         private QuadTree _space;
         private static MapBoundary _boundary;
         private List<Collidable> _allObjects;
+        private Game _game;
+        private IHubContext<GameHub> _gameHub;
 
         private object _insertLock = new object();
 
-        public Map()
+        public Map(Game game, IHubContext<GameHub> gameHub)
         {
             // Double collidable for fast removes/inserts
             _allObjects = new List<Collidable>();
             _space = new QuadTree(WIDTH, HEIGHT, MIN_PARTITION_WIDTH, MIN_PARTITION_HEIGHT);
             _boundary = new MapBoundary(WIDTH, HEIGHT);
+            _game = game;
+            _gameHub = gameHub;
         }
 
         public void Insert(Collidable obj)
@@ -52,14 +57,14 @@ namespace ShootR
             return _allObjects.Contains(obj);
         }
 
-        public void CheckIncreaseMapSize(int shipCount)
+        public async Task CheckIncreaseMapSizeAsync(int shipCount)
         {
             if (shipCount >= MAX_SHIPS)
             {
                 IncreaseSize();
-                Game.Instance.Configuration.mapConfig.WIDTH = WIDTH;
-                Game.Instance.Configuration.mapConfig.HEIGHT = HEIGHT;
-                GlobalHost.ConnectionManager.GetHubContext<GameHub>().Clients.All.mapSizeIncreased(new { Width = WIDTH, Height = HEIGHT });
+                _game.Configuration.mapConfig.WIDTH = WIDTH;
+                _game.Configuration.mapConfig.HEIGHT = HEIGHT;
+                await _gameHub.Clients.All.InvokeAsync("mapSizeIncreased", new { Width = WIDTH, Height = HEIGHT });
             }
         }
 
