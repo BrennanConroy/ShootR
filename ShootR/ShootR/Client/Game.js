@@ -52,8 +52,6 @@ var ShootR;
                 _this._hud.OnScreenResize(newSize);
                 _this._bufferedViewport.Size = newSize.Add(ShootR.GameScreen.SCREEN_BUFFER_AREA);
             });
-
-            this._doneConstructing = true;
         }
         Game.prototype.LoadContent = function () {
             this.Content.LoadImage("StarBackground", "/Images/bg_stars.png", 1000, 1000);

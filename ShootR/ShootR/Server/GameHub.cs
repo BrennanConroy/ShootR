@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace ShootR
 {
     public class GameHub : Hub
     {
         private readonly Game _game;
-        public GameHub(Game game)
+        private readonly ILogger _logger;
+        public GameHub(Game game, ILogger<GameHub> logger)
         {
             _game = game;
+            _logger = logger;
         }
 
         public override Task OnConnectedAsync()
@@ -49,7 +52,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("fire", e);
             }
 
             return 0;
@@ -73,7 +76,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("startFire", e);
                 }
             }
         }
@@ -94,7 +97,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("stopFire", e);
                 }
             }
 
@@ -109,7 +112,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("readyForPayloads", e);
             }
         }
 
@@ -133,7 +136,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("syncMovement", e);
                 }
             }
         }
@@ -168,7 +171,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("resetMovement", e);
                 }
             }
         }
@@ -196,7 +199,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("startAndStopMovement", e);
                 }
             }
         }
@@ -226,7 +229,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("registerMoveStart", e);
                 }
             }
         }
@@ -256,7 +259,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("registerMoveStop", e);
                 }
             }
         }
@@ -281,7 +284,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("registerAbilityStart", e);
                 }
             }
         }
@@ -306,7 +309,7 @@ namespace ShootR
                 }
                 catch (Exception e)
                 {
-                    //ErrorLog.Instance.Log(e);
+                    _logger.LogError("registerAbilityStop", e);
                 }
             }
         }
@@ -322,7 +325,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("changeViewport", e);
             }
         }
 
@@ -338,7 +341,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("readyForLeaderboardPayloads", e);
             }
         }
 
@@ -354,7 +357,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("stopLeaderboardPayloads", e);
             }
         }
 
@@ -373,7 +376,7 @@ namespace ShootR
             }
             catch (Exception e)
             {
-                //ErrorLog.Instance.Log(e);
+                _logger.LogError("sendMessage", e);
             }
         }
     }

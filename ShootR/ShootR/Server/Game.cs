@@ -131,33 +131,31 @@ namespace ShootR
         {
             if (!UserHandler.UserExistsAndReady(connectionId))
             {
+                _gameLock.Wait();
                 try
                 {
-                    lock (_gameLock)
+                    User user = null;//UserHandler.FindUserByIdentity(rc.Identity);
+                    Ship ship = null;
+
+                    if (user == null)
                     {
-                        User user = null;//UserHandler.FindUserByIdentity(rc.Identity);
-                        Ship ship = null;
-
-                        if (user == null)
+                        if (UserHandler.TotalActiveUsers >= 50/*RuntimeConfiguration.MaxServerUsers*/)
                         {
-                            if (UserHandler.TotalActiveUsers >= 50/*RuntimeConfiguration.MaxServerUsers*/)
+                            return new
                             {
-                                return new
-                                {
-                                    ServerFull = true
-                                };
-                            }
-                            else
-                            {
-                                ship = new Ship(this, RespawnManager.GetRandomStartPosition(), GameHandler.BulletManager);
-                                ship.Name = rc.DisplayName;
-                                user = new User(connectionId, ship, rc) { Controller = false };
-                                UserHandler.AddUser(user);
-                            }
+                                ServerFull = true
+                            };
                         }
-
-                        GameHandler.AddShipToGame(ship);
+                        else
+                        {
+                            ship = new Ship(this, RespawnManager.GetRandomStartPosition(), GameHandler.BulletManager);
+                            ship.Name = rc.DisplayName;
+                            user = new User(connectionId, ship, rc) { Controller = false };
+                            UserHandler.AddUser(user);
+                        }
                     }
+
+                    GameHandler.AddShipToGame(ship);
 
                     return new
                     {
@@ -177,7 +175,11 @@ namespace ShootR
                     };
                 }
                 catch
-                {}
+                { }
+                finally
+                {
+                    _gameLock.Release();
+                }
             }
             return null;
         }

@@ -63,7 +63,7 @@ var ShootR;
                     if (!initialization) {
                         if (count >= ServerAdapter.NEGOTIATE_RETRIES) {
                             console.log("Could not negotiate with server, refreshing the page.");
-                            //window.location.reload();
+                            window.location.reload();
                         } else {
                             setTimeout(function () {
                                 _this.TryInitialize(userInformation, onComplete, count + 1);
