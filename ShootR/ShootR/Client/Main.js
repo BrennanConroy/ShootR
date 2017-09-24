@@ -6,14 +6,12 @@
 $(function () {
     var gameCanvas = $("#game"), popUpHolder = $("#popUpHolder"), gameContent = $("#gameContent"), loadContent = $("#loadContent"), game, serverAdapter = new ShootR.Server.ServerAdapter(new signalR.HubConnection("/Game"), "shootr.state"), gameScreen = new ShootR.GameScreen(gameCanvas, popUpHolder, serverAdapter);
 
-    gameScreen.OnResizeComplete.BindFor(function () {
-        serverAdapter.Negotiate().done(function (initializationData) {
-            loadContent.hide();
-            gameContent.show();
+    serverAdapter.Negotiate().done(function (initializationData) {
+        loadContent.hide();
+        gameContent.show();
 
-            game = new ShootR.Game(gameCanvas[0], gameScreen, serverAdapter, initializationData);
-            gameScreen.ForceResizeCheck();
-        });
-    }, 1);
+        game = new ShootR.Game(gameCanvas[0], gameScreen, serverAdapter, initializationData);
+        gameScreen.ForceResizeCheck();
+    });
 });
 //# sourceMappingURL=Main.js.map
