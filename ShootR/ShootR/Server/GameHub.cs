@@ -153,7 +153,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -184,7 +184,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -216,7 +216,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -246,7 +246,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -272,7 +272,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -297,7 +297,7 @@ namespace ShootR
                 {
                     if (pingBack)
                     {
-                        await Clients.Client(Context.ConnectionId).InvokeAsync("pingBack");
+                        await Clients.Client(Context.ConnectionId).SendAsync("pingBack");
                     }
 
                     Ship ship = _game.UserHandler.GetUserShip(Context.ConnectionId);
@@ -371,7 +371,7 @@ namespace ShootR
                     var from = ship.Name;
 
                     //TODO: send a message to #shootr using the jabbr c# client later
-                    await Clients.AllExcept(new List<string>{ Context.ConnectionId }).InvokeAsync("chatMessage", from, message, 0 /* standard message */);
+                    await Clients.AllExcept(new List<string>{ Context.ConnectionId }).SendAsync("chatMessage", from, message, 0 /* standard message */);
                 }
             }
             catch (Exception e)

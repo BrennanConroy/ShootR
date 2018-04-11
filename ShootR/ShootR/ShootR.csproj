@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha1-final" />
+      <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0-preview2-final" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-preview2-final" />
       <PackageReference Include="BuildBundlerMinifier" Version="2.4.337">
         <NoWarn>KRB4002</NoWarn>
       </PackageReference>

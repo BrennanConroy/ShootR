@@ -69,7 +69,7 @@ namespace ShootR
 
         public virtual Task PushToClientAsync(object[] payload, IHubContext<GameHub> context)
         {
-            return context.Clients.Client(ConnectionID).InvokeAsync("d", new [] { payload });
+            return context.Clients.Client(ConnectionID).SendAsync("d", payload);
         }
 
         public void Update()

@@ -57,7 +57,7 @@ namespace ShootR
                     foreach (User u in user.RemoteControllers)
                     {
                         u.MyShip = null;
-                        await _gameHub.Clients.Client(u.ConnectionID).InvokeAsync("stopController", "Primary account has been stopped!");
+                        await _gameHub.Clients.Client(u.ConnectionID).SendAsync("stopController", "Primary account has been stopped!");
                     }
 
                     user.RemoteControllers.Clear();

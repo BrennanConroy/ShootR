@@ -265,12 +265,7 @@
             <script type="text/javascript" src="scripts/bundles/jqueryjs.min.js"></script>
             <script type="text/javascript" src="scripts/bundles/game.min.js"></script>
             <script>
-                if (typeof Promise === 'undefined') {
-                    document.write('<script type="text/javascript" src="scripts/signalr-clientES5.min.js"><\/script>');
-                }
-                else {
-                    document.write('<script type="text/javascript" src="scripts/signalr-client.min.js"><\/script>');
-                }
+                document.write('<script type="text/javascript" src="scripts/signalr.min.js"><\/script>');
             </script>
 
         </asp:Panel>

@@ -64,7 +64,7 @@ namespace ShootR
                 IncreaseSize();
                 _game.Configuration.mapConfig.WIDTH = WIDTH;
                 _game.Configuration.mapConfig.HEIGHT = HEIGHT;
-                await _gameHub.Clients.All.InvokeAsync("mapSizeIncreased", new { Width = WIDTH, Height = HEIGHT });
+                await _gameHub.Clients.All.SendAsync("mapSizeIncreased", new { Width = WIDTH, Height = HEIGHT });
             }
         }
 

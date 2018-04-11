@@ -201,7 +201,7 @@ namespace ShootR
 
         private async Task PushLeaderboardAsync (List<object> leaderboard)
         {
-            await _gameHub.Clients.Group(Leaderboard.LEADERBOARD_REQUESTEE_GROUP).InvokeAsync("l", leaderboard);
+            await _gameHub.Clients.Group(Leaderboard.LEADERBOARD_REQUESTEE_GROUP).SendAsync("l", leaderboard);
         }
     }
 }
