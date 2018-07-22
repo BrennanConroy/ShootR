@@ -22,12 +22,12 @@ namespace ShootR
 
         public Task RequestLeaderboardAsync(string connectionId)
         {
-            return _gameHub.Groups.AddAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
+            return _gameHub.Groups.AddToGroupAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
         }
 
         public Task StopRequestingLeaderboardAsync(string connectionId)
         {
-            return _gameHub.Groups.RemoveAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
+            return _gameHub.Groups.RemoveFromGroupAsync(connectionId, LEADERBOARD_REQUESTEE_GROUP);
         }
 
         public IEnumerable<LeaderboardEntry> GetAndUpdateLeaderboard()

@@ -51,7 +51,7 @@ namespace ShootR
                     }
 
                     // Leave the leaderboard group just in case user was in it
-                    await _gameHub.Groups.RemoveAsync(connectionId, Leaderboard.LEADERBOARD_REQUESTEE_GROUP);
+                    await _gameHub.Groups.RemoveFromGroupAsync(connectionId, Leaderboard.LEADERBOARD_REQUESTEE_GROUP);
 
                     // Clear controllers
                     foreach (User u in user.RemoteControllers)

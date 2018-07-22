@@ -23,9 +23,9 @@ namespace ShootR
             return Task.CompletedTask;
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override Task OnDisconnectedAsync(Exception exception)
         {
-            await _game.ConnectionManager.OnDisconnectedAsync(Context.ConnectionId);
+            return _game.ConnectionManager.OnDisconnectedAsync(Context.ConnectionId);
         }
 
         /// <summary>
