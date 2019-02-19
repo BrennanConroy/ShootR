@@ -4,7 +4,7 @@
 /// <reference path="GameScreen.ts" />
 /// <reference path="Server/ServerAdapter.ts" />
 $(function () {
-    var gameCanvas = $("#game"), popUpHolder = $("#popUpHolder"), gameContent = $("#gameContent"), loadContent = $("#loadContent"), game, serverAdapter = new ShootR.Server.ServerAdapter(new signalR.HubConnection("/Game"), "shootr.state"), gameScreen = new ShootR.GameScreen(gameCanvas, popUpHolder, serverAdapter);
+    var gameCanvas = $("#game"), popUpHolder = $("#popUpHolder"), gameContent = $("#gameContent"), loadContent = $("#loadContent"), game, serverAdapter = new ShootR.Server.ServerAdapter(new signalR.HubConnectionBuilder().withUrl("/Game").build(), "shootr.state"), gameScreen = new ShootR.GameScreen(gameCanvas, popUpHolder, serverAdapter);
 
     serverAdapter.Negotiate().done(function (initializationData) {
         loadContent.hide();
